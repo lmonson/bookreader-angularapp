@@ -3634,16 +3634,16 @@ BookReader.prototype.initToolbar = function(mode, ui) {
     $("#BookReader").append(
           "<div id='BRtoolbar'>"
         +   "<span id='BRtoolbarbuttons'>"
-        +     "<form action='javascript:br.search($(\"#textSrch\").val());' id='booksearch'><input type='search' id='textSrch' name='textSrch' val='' placeholder='Search inside'/><button type='submit' id='btnSrch' name='btnSrch'>GO</button></form>"
-        +     "<button class='BRicon play'></button>"
-        +     "<button class='BRicon pause'></button>"
-        +     "<button class='BRicon info'></button>"
-        +     "<button class='BRicon share'></button>"
-        +     readIcon
+        +     "<form action='javascript:br.search($(\"#textSrch\").val());' id='booksearch'><input type='search' id='textSrch' name='textSrch' val='' placeholder='Name'/><input type='search' id='textSrch' name='textSrch' val='' placeholder='Date'/><input type='search' id='textSrch' name='textSrch' val='' placeholder='Place'/><br><input type='search' id='textSrch' name='textSrch' val='' placeholder=\"Relative's name\"/><input type='search' id='textSrch' name='textSrch' val='' placeholder=\"Relative's name\"/><input type='search' id='textSrch' name='textSrch' val='' placeholder=\"Relative's name\"/><button type='submit' id='btnSrch' name='btnSrch'>GO</button></form>"
+        //+     "<button class='BRicon play'></button>"
+        //+     "<button class='BRicon pause'></button>"
+        //+     "<button class='BRicon info'></button>"
+        //+     "<button class='BRicon share'></button>"
+        //+     readIcon
         //+     "<button class='BRicon full'></button>"
         +   "</span>"
-        +   "<span><a class='logo' href='" + this.logoURL + "'></a></span>"
-        +   "<span id='BRreturn'><a></a></span>"
+        //+   "<span><a class='logo' href='" + this.logoURL + "'></a></span>"
+        //+   "<span id='BRreturn'><a></a></span>"
         +   "<div id='BRnavCntlTop' class='BRnabrbuvCntl'></div>"
         + "</div>"
         /*
@@ -3666,7 +3666,8 @@ BookReader.prototype.initToolbar = function(mode, ui) {
        $('#BRtoolbarbuttons .share').hide();
     }
 
-    $('#BRreturn a').attr('href', this.bookUrl).text(this.bookTitle);
+//    $('#BRreturn a').attr('href', this.bookUrl).text(this.bookTitle);
+//    $('#BRreturn a').attr('href', '').text('');
 
     $('#BRtoolbar .BRnavCntl').addClass('BRup');
     $('#BRtoolbar .pause').hide();
@@ -4709,8 +4710,8 @@ BookReader.prototype.gotOpenLibraryRecord = function(self, olObject) {
             //For the IA theme, no longer show links to OL
             self.bookUrl = self.olHost + olObject.key;
             self.bookTitle = olObject['title'];
-            $('#BRreturn a').attr( {'href': self.bookUrl, 'title': "Go to this book's page on Open Library" } );
-            $('#BRreturn a').text(self.bookTitle);
+//            $('#BRreturn a').attr( {'href': self.bookUrl, 'title': "Go to this book's page on Open Library" } );
+//            $('#BRreturn a').text(self.bookTitle);
 
             $('#BRinfo').remove();
             $('#BRshare').after(self.blankInfoDiv());
@@ -4733,20 +4734,20 @@ BookReader.prototype.gotOpenLibraryRecord = function(self, olObject) {
                 .appendTo('#BRreturn');
             */
 
-            $('<form id="BRreturnform" action="' + returnUrl + '" method="post"><input type="submit" value="Return book" onclick="olAuth.deleteCookies();"/><input type="hidden" name="action" value="return" /></form>')
-                .appendTo('#BRreturn');
+            //$('<form id="BRreturnform" action="' + returnUrl + '" method="post"><input type="submit" value="Return book" onclick="olAuth.deleteCookies();"/><input type="hidden" name="action" value="return" /></form>')
+            //    .appendTo('#BRreturn');
 
         } else {
             if (self.theme == 'ol') {
-                $('<a/>').attr( { 'href': self.bookUrl, 'title': 'Go to this book\'s page on Open Library' } )
-                    .text('On openlibrary.org')
-                    .appendTo('#BRreturn');
+                //$('<a/>').attr( { 'href': self.bookUrl, 'title': 'Go to this book\'s page on Open Library' } )
+                //    .text('On openlibrary.org')
+                //    .appendTo('#BRreturn');
             }
         }
 
         if ((self.theme == 'ol') || (self.olAuth)) {
-            $('#BRreturn').css({ 'line-height': '19px'} );
-            $('#BRreturn a').css( {'height': '18px' } );
+            //$('#BRreturn').css({ 'line-height': '19px'} );
+            //$('#BRreturn a').css( {'height': '18px' } );
         }
 
     }
