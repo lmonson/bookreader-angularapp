@@ -3634,7 +3634,15 @@ BookReader.prototype.initToolbar = function(mode, ui) {
     $("#BookReader").append(
           "<div id='BRtoolbar'>"
         +   "<span id='BRtoolbarbuttons'>"
-        +     "<form action='javascript:br.search($(\"#textSrch\").val());' id='booksearch'><input type='search' id='textSrch' name='textSrch' val='' placeholder='Name'/><input type='search' id='textSrch' name='textSrch' val='' placeholder='Date'/><input type='search' id='textSrch' name='textSrch' val='' placeholder='Place'/><br><input type='search' id='textSrch' name='textSrch' val='' placeholder=\"Relative's name\"/><input type='search' id='textSrch' name='textSrch' val='' placeholder=\"Relative's name\"/><input type='search' id='textSrch' name='textSrch' val='' placeholder=\"Relative's name\"/><button type='submit' id='btnSrch' name='btnSrch'>GO</button></form>"
+        +     "<form action='javascript:br.search($(\"#textSrch\").val());' id='booksearch'>"
+          + "<input type='search' id='nameSrch' name='nameSrch' val='' placeholder='Name' size=10/>&nbsp;&nbsp;" +
+          "<input type='search' id='dateSrch' name='dateSrch' val='' placeholder='Date'/>&nbsp;&nbsp;" +
+          "<input type='search' id='placeSrch' name='placeSrch' val='' placeholder='Place'/><br>" +
+          "<input type='search' id='relSrch1' name='relSrch1' val='' placeholder=\"Relative's name\"/>&nbsp;&nbsp;" +
+          "<input type='search' id='relSrch2' name='relSrch2' val='' placeholder=\"Relative's name\"/>&nbsp;&nbsp;" +
+          "<input type='search' id='relSrch3' name='relSrch3' val='' placeholder=\"Relative's name\"/>" +
+          "<button type='submit' id='btnSrch' name='btnSrch'>GO</button>" +
+          "</form>"
         //+     "<button class='BRicon play'></button>"
         //+     "<button class='BRicon pause'></button>"
         //+     "<button class='BRicon info'></button>"
