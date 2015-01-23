@@ -4371,6 +4371,12 @@ BookReader.prototype.paramsFromFragment = function(urlFragment) {
         urlFragment = urlFragment.substr(1);
     }
 
+    // For convenience we allow an initial / character (as from angularjs)
+    // but don't require it
+    if (urlFragment.substr(0,1) == '/') {
+      urlFragment = urlFragment.substr(1);
+    }
+
     // Simple #nn syntax
     var oldStyleLeafNum = parseInt( /^\d+$/.exec(urlFragment) );
     if ( !isNaN(oldStyleLeafNum) ) {
