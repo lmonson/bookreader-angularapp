@@ -161,6 +161,7 @@ BookReader.prototype.init = function() {
 
     // Find start index and mode if set in location hash
     var params = {};
+    this.windowLocationHash = window.location.hash;
     if (window.location.hash) {
         // params explicitly set in URL
         params = this.paramsFromFragment(window.location.hash);
@@ -4555,7 +4556,7 @@ BookReader.prototype.getPageName = function(index) {
 // using window.location.replace
 BookReader.prototype.updateLocationHash = function() {
     var newHash = '#' + this.fragmentFromParams(this.paramsFromCurrent());
-    window.location.replace(newHash);
+    this.windowLocationHash = newHash;
 
     // Send an analytics event if the location hash is changed (page flip or mode change),
     // which indicates that the user is actively reading the book. This will cause the
@@ -4585,7 +4586,7 @@ BookReader.prototype.updateLocationHash = function() {
 // Starts polling of window.location to see hash fragment changes
 BookReader.prototype.startLocationPolling = function() {
     var self = this; // remember who I am
-    self.oldLocationHash = window.location.hash;
+    self.oldLocationHash = self.windowLocationHash;
 
     if (this.locationPollId) {
         clearInterval(this.locationPollID);
@@ -4593,7 +4594,7 @@ BookReader.prototype.startLocationPolling = function() {
     }
 
     this.locationPollId = setInterval(function() {
-        var newHash = window.location.hash;
+        var newHash = self.windowLocationHash;
         if (newHash != self.oldLocationHash) {
             if (newHash != self.oldUserHash) { // Only process new user hash once
                 //console.log('url change detected ' + self.oldLocationHash + " -> " + newHash);
