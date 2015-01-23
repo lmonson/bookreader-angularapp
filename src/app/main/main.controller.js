@@ -29,16 +29,7 @@ angular.module('bookreader')
 // We load the images from archive.org -- you can modify this function to retrieve images
 // using a different URL structure
     br.getPageURI = function(index, reduce, rotate) {
-      // reduce and rotate are ignored in this simple implementation, but we
-      // could e.g. look at reduce and load images from a different directory
-      // or pass the information to an image server
-      var leafStr = '000';
-      var imgStr = (index+1).toString();
-      var re = new RegExp("0{"+imgStr.length+"}$");
-//      var url = 'http://www.archive.org/download/BookReader/img/page'+leafStr.replace(re, imgStr) + '.jpg';
-//      var url = 'http://localhost:3000/assets/book/page'+leafStr.replace(re, imgStr) + '.jpg';
-      var url = bookurl +leafStr.replace(re, imgStr) + '.jpg';
-      return url;
+      return bookurl + (index+1) + '.jpg';
     }
 
 // Return which side, left or right, that a given page should be displayed on
