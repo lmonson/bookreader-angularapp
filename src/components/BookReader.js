@@ -161,6 +161,7 @@ BookReader.prototype.init = function() {
 
     // Find start index and mode if set in location hash
     var params = {};
+    this.windowLocationHash = window.location.hash;
     if (window.location.hash) {
         // params explicitly set in URL
         params = this.paramsFromFragment(window.location.hash);
@@ -322,6 +323,9 @@ BookReader.prototype.init = function() {
     if (this.getOpenLibraryRecord) {
         this.getOpenLibraryRecord(this.gotOpenLibraryRecord);
     }
+
+    // this code references a global br variable in half a dozen places; I assume it could be defined here
+    window.br = this;
 
 }
 
@@ -667,6 +671,7 @@ BookReader.prototype.drawLeafsThumbnail = function( seekIndex ) {
     var link;
     var img;
     var page;
+    var leaf;
     for (i=0; i<rowsToDisplay.length; i++) {
         if (BookReader.util.notInArray(rowsToDisplay[i], this.displayedRows)) {
             row = rowsToDisplay[i];
@@ -1093,7 +1098,7 @@ BookReader.prototype.resizePageView1up = function() {
 BookReader.prototype.onePageCalculateViewDimensions = function(reduce, padding) {
     var viewWidth = 0;
     var viewHeight = 0;
-    for (i=0; i<this.numLeafs; i++) {
+    for (var i=0; i<this.numLeafs; i++) {
         viewHeight += parseInt(this._getPageHeight(i)/this.reduce) + this.padding;
         var width = parseInt(this._getPageWidth(i)/this.reduce);
         if (width>viewWidth) viewWidth=width;
@@ -1210,7 +1215,7 @@ BookReader.prototype.quantizeReduce = function(reduce, reductionFactors) {
     var quantized = reductionFactors[0].reduce;
     var distance = Math.abs(reduce - quantized);
     for (var i = 1; i < reductionFactors.length; i++) {
-        newDistance = Math.abs(reduce - reductionFactors[i].reduce);
+        var newDistance = Math.abs(reduce - reductionFactors[i].reduce);
         if (newDistance < distance) {
             distance = newDistance;
             quantized = reductionFactors[i].reduce;
@@ -1273,7 +1278,7 @@ BookReader.prototype.jumpToPage = function(pageNum) {
 
     // Check for special "leaf"
     var re = new RegExp('^leaf(\\d+)');
-    leafMatch = re.exec(pageNum);
+    var leafMatch = re.exec(pageNum);
     if (leafMatch) {
         console.log(leafMatch[1]);
         pageIndex = this.leafNumToIndex(parseInt(leafMatch[1],10));
@@ -1350,6 +1355,7 @@ BookReader.prototype.jumpToIndex = function(index, pageX, pageY) {
         }
     } else {
         // 1up
+        var leafLeft = 0;
         var leafTop = this.onePageGetPageTop(index);
 
         if (pageY) {
@@ -1581,7 +1587,7 @@ BookReader.prototype.prepareTwoPageView = function(centerPercentageX, centerPerc
         top: this.twoPage.bookCoverDivTop+this.twoPage.coverInternalPadding+'px'
     }).appendTo('#BRtwopageview');
 
-    div = document.createElement('div');
+    var div = document.createElement('div');
     $(div).attr('id', 'BRgutter').css({
         width:           this.twoPage.bookSpineDivWidth+'px',
         height:          this.twoPage.bookSpineDivHeight+'px',
@@ -2735,23 +2741,24 @@ BookReader.prototype.getPageWidth2UP = function(index) {
 // search()
 //______________________________________________________________________________
 BookReader.prototype.search = function(term) {
-    //console.log('search called with term=' + term);
+    console.log('search called with term=' + term);
 
     $('#textSrch').blur(); //cause mobile safari to hide the keyboard
 
-    var url = 'https://'+this.server.replace(/:.+/, ''); //remove the port and userdir
-    url    += '/fulltext/inside.php?item_id='+this.bookId;
-    url    += '&doc='+this.subPrefix;   //TODO: test with subitem
-    url    += '&path='+this.bookPath.replace(new RegExp('/'+this.subPrefix+'$'), ''); //remove subPrefix from end of path
-    url    += '&q='+escape(term);
-    //console.log('search url='+url);
+    // TODO fixme
+    //var url = 'https://'+this.server.replace(/:.+/, ''); //remove the port and userdir
+    //url    += '/fulltext/inside.php?item_id='+this.bookId;
+    //url    += '&doc='+this.subPrefix;   //TODO: test with subitem
+    //url    += '&path='+this.bookPath.replace(new RegExp('/'+this.subPrefix+'$'), ''); //remove subPrefix from end of path
+    //url    += '&q='+escape(term);
+    ////console.log('search url='+url);
+    //
+    //term = term.replace(/\//g, ' '); // strip slashes, since this goes in the url
+    //this.searchTerm = term;
 
-    term = term.replace(/\//g, ' '); // strip slashes, since this goes in the url
-    this.searchTerm = term;
-
-    this.removeSearchResults();
-    this.showProgressPopup('<img id="searchmarker" src="'+this.imagesBaseURL + 'marker_srch-on.png'+'"> Search results will appear below...');
-    $.ajax({url:url, dataType:'jsonp', jsonpCallback:'br.BRSearchCallback'});
+    //this.removeSearchResults();
+    //this.showProgressPopup('<img id="searchmarker" src="'+this.imagesBaseURL + 'marker_srch-on.png'+'"> Search results will appear below...');
+    //$.ajax({url:url, dataType:'jsonp', jsonpCallback:'br.BRSearchCallback'});
 }
 
 // BRSearchCallback()
@@ -3445,6 +3452,7 @@ BookReader.prototype.addSearchResult = function(queryString, pageIndex) {
     }
 
     var re = new RegExp('{{{(.+?)}}}', 'g');
+    console.log('queryString', queryString);
     queryString = queryString.replace(re, '<a href="#" onclick="br.jumpToIndex('+pageIndex+'); return false;">$1</a>')
 
     var marker = $('<div class="search" style="top:'+(-$('#BRcontainer').height())+'px; left:' + percentThrough + ';" title="' + uiStringSearch + '"><div class="query">'
@@ -3816,7 +3824,7 @@ BookReader.prototype.updateToolbarZoom = function(reduce) {
 BookReader.prototype.bindNavigationHandlers = function() {
 
     var self = this; // closure
-    jIcons = $('.BRicon');
+    var jIcons = $('.BRicon');
 
     jIcons.filter('.onepg').bind('click', function(e) {
         self.switchMode(self.constMode1up);
@@ -4548,7 +4556,7 @@ BookReader.prototype.getPageName = function(index) {
 // using window.location.replace
 BookReader.prototype.updateLocationHash = function() {
     var newHash = '#' + this.fragmentFromParams(this.paramsFromCurrent());
-    window.location.replace(newHash);
+    this.windowLocationHash = newHash;
 
     // Send an analytics event if the location hash is changed (page flip or mode change),
     // which indicates that the user is actively reading the book. This will cause the
@@ -4578,7 +4586,7 @@ BookReader.prototype.updateLocationHash = function() {
 // Starts polling of window.location to see hash fragment changes
 BookReader.prototype.startLocationPolling = function() {
     var self = this; // remember who I am
-    self.oldLocationHash = window.location.hash;
+    self.oldLocationHash = self.windowLocationHash;
 
     if (this.locationPollId) {
         clearInterval(this.locationPollID);
@@ -4586,7 +4594,7 @@ BookReader.prototype.startLocationPolling = function() {
     }
 
     this.locationPollId = setInterval(function() {
-        var newHash = window.location.hash;
+        var newHash = self.windowLocationHash;
         if (newHash != self.oldLocationHash) {
             if (newHash != self.oldUserHash) { // Only process new user hash once
                 //console.log('url change detected ' + self.oldLocationHash + " -> " + newHash);
