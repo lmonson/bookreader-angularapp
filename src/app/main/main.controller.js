@@ -125,8 +125,12 @@ angular.module('bookreader')
         }
       });
 
-      return 'https://www.gengophers.com/api/books/89/search?' +
+      // TODO: Update this URL with the correct book ID
+      var url = 'https://www.gengophers.com/api/books/89/search?' +
         parts.map(function (o) {return o.k + '=' + o.v;}).join('&');
+
+      // Wrap the JSON call in a JSON-P wrapper for now
+      return 'http://json2jsonp.com/?url=' + encodeURIComponent(url);
     };
 
 
