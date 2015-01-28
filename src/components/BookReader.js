@@ -2763,6 +2763,15 @@ BookReader.prototype.search = function(term) {
     //$.ajax({url:url, dataType:'jsonp', jsonpCallback:'br.BRSearchCallback'});
 }
 
+BookReader.prototype.fillSearchForm = function (query) {
+  $('#nameSrch').val(query.name);
+  $('#dateSrch').val(query.date);
+  $('#placeSrch').val(query.place);
+  $('#relSrch1').val(query.relative1);
+  $('#relSrch2').val(query.relative2);
+  $('#relSrch3').val(query.relative3);
+};
+
   /**
    * Performs a search using all the form fields. You can have it use different search engines by registering different
    * functions in this.searchEngines which translate the query object into a URL.

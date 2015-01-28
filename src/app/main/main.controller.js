@@ -134,6 +134,15 @@ angular.module('bookreader')
 // Let's go!
     br.init();
 
+
+    // Show the initial search results
+    var initialSearch = getParameterByName('initialsearch');
+    if (initialSearch) {
+      console.log("Initial search: " + initialSearch);
+      br.fillSearchForm(JSON.parse(decodeURIComponent(initialSearch)));
+      br.customSearch();
+    }
+
 // read-aloud and search need backend compenents and are not supported in the demo
 //    $('#BRtoolbar').find('.read').hide();
 //    $('#textSrch').hide();
