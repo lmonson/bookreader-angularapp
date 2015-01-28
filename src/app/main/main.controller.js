@@ -94,6 +94,43 @@ angular.module('bookreader')
       return "Embed code not supported in bookreader demo.";
     };
 
+
+
+    /*
+     This method is needed to display the search results, but isn't defined in BookReader.js so define it here.
+     */
+    br.leafNumToIndex = function (leafNum) {
+      return leafNum;
+    };
+
+
+    /*
+     Register the search endpoint.
+     */
+    br.searchEngines.std = function (query) {
+
+      var mapping = {
+        name: 'surname',
+        date: 'date',
+        place: 'place',
+        relative1: 'rel1',
+        relative2: 'rel2',
+        relative3: 'rel3'
+      };
+
+      var parts = [];
+      Object.keys(query).forEach(function (key) {
+        if (query[key]) {
+          parts.push({k: mapping[key], v: query[key]});
+        }
+      });
+
+      return 'https://www.gengophers.com/api/books/89/search?' +
+        parts.map(function (o) {return o.k + '=' + o.v;}).join('&');
+    };
+
+
+
 // Let's go!
     br.init();
 
