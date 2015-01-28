@@ -143,7 +143,7 @@ angular.module('bookreader')
     var initialSearch = getParameterByName('initialsearch');
     if (initialSearch) {
       console.log("Initial search: " + initialSearch);
-      br.fillSearchForm(JSON.parse(decodeURIComponent(initialSearch)));
+      br.fillSearchForm(JSON.parse(initialSearch));
       br.customSearch();
     }
 
