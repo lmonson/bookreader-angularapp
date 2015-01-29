@@ -107,8 +107,9 @@ angular.module('bookreader')
     /*
      Register the search endpoint.
      */
-    br.searchEngines.std = function (query) {
+    br.searchEndpoints.std = function (query) {
 
+      // What query string parameter names should be used for each of the query object fields
       var mapping = {
         name: 'surname',
         date: 'date',

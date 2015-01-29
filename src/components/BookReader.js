@@ -149,7 +149,7 @@ function BookReader(opts) {
     this.theme = 'ol';
 
     // Search engines. Used for translating query JSON objects into URLs
-    this.searchEngines = {};
+    this.searchEndpoints = {};
     return this;
 };
 
@@ -2774,13 +2774,13 @@ BookReader.prototype.fillSearchForm = function (query) {
 
   /**
    * Performs a search using all the form fields. You can have it use different search engines by registering different
-   * functions in this.searchEngines which translate the query object into a URL.
-   * @param engine (optional) The name of the search engine to use.
+   * functions in this.searchEndpoints which translate the query object into a URL.
+   * @param endpoint (optional) The name of the search endpoint translator to use.
    */
-BookReader.prototype.customSearch = function (engine) {
+BookReader.prototype.customSearch = function (endpoint) {
 
   // Get the method associated with the name or the first one.
-  engine = this.searchEngines[engine || Object.keys(this.searchEngines)[0]];
+  endpoint = this.searchEndpoints[endpoint || Object.keys(this.searchEndpoints)[0]];
 
   var query = {
     name: $('#nameSrch').val(),
@@ -2792,7 +2792,7 @@ BookReader.prototype.customSearch = function (engine) {
   };
 
   // Build the URL to the search endpoint using the registered method
-  var url = engine.call(this, query);
+  var url = endpoint.call(this, query);
   console.log(url);
 
   $.ajax({url: url, dataType: 'jsonp', jsonpCallback: 'br.BRSearchCallback'});
