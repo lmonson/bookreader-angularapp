@@ -94,8 +94,59 @@ angular.module('bookreader')
       return "Embed code not supported in bookreader demo.";
     };
 
+
+
+    /*
+     This method is needed to display the search results, but isn't defined in BookReader.js so define it here.
+     */
+    br.leafNumToIndex = function (leafNum) {
+      return leafNum;
+    };
+
+
+    /*
+     Register the search endpoint.
+     */
+    br.searchEndpoints.std = function (query) {
+
+      // What query string parameter names should be used for each of the query object fields
+      var mapping = {
+        name: 'surname',
+        date: 'date',
+        place: 'place',
+        relative1: 'rel1',
+        relative2: 'rel2',
+        relative3: 'rel3'
+      };
+
+      var parts = [];
+      Object.keys(query).forEach(function (key) {
+        if (query[key]) {
+          parts.push({k: mapping[key], v: query[key]});
+        }
+      });
+
+      // TODO: Update this URL with the correct book ID
+      var url = 'https://www.gengophers.com/api/books/89/search?' +
+        parts.map(function (o) {return o.k + '=' + o.v;}).join('&');
+
+      // Wrap the JSON call in a JSON-P wrapper for now
+      return 'http://json2jsonp.com/?url=' + encodeURIComponent(url);
+    };
+
+
+
 // Let's go!
     br.init();
+
+
+    // Show the initial search results
+    var initialSearch = getParameterByName('initialsearch');
+    if (initialSearch) {
+      console.log("Initial search: " + initialSearch);
+      br.fillSearchForm(JSON.parse(initialSearch));
+      br.customSearch();
+    }
 
 // read-aloud and search need backend compenents and are not supported in the demo
 //    $('#BRtoolbar').find('.read').hide();

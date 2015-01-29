@@ -148,6 +148,8 @@ function BookReader(opts) {
     this.default_theme = 'ol';
     this.theme = 'ol';
 
+    // Search engines. Used for translating query JSON objects into URLs
+    this.searchEndpoints = {};
     return this;
 };
 
@@ -2761,6 +2763,42 @@ BookReader.prototype.search = function(term) {
     //$.ajax({url:url, dataType:'jsonp', jsonpCallback:'br.BRSearchCallback'});
 }
 
+BookReader.prototype.fillSearchForm = function (query) {
+  $('#nameSrch').val(query.name);
+  $('#dateSrch').val(query.date);
+  $('#placeSrch').val(query.place);
+  $('#relSrch1').val(query.relative1);
+  $('#relSrch2').val(query.relative2);
+  $('#relSrch3').val(query.relative3);
+};
+
+  /**
+   * Performs a search using all the form fields. You can have it use different search engines by registering different
+   * functions in this.searchEndpoints which translate the query object into a URL.
+   * @param endpoint (optional) The name of the search endpoint translator to use.
+   */
+BookReader.prototype.customSearch = function (endpoint) {
+
+  // Get the method associated with the name or the first one.
+  endpoint = this.searchEndpoints[endpoint || Object.keys(this.searchEndpoints)[0]];
+
+  var query = {
+    name: $('#nameSrch').val(),
+    date: $('#dateSrch').val(),
+    place: $('#placeSrch').val(),
+    relative1: $('#relSrch1').val(),
+    relative2: $('#relSrch2').val(),
+    relative3: $('#relSrch3').val()
+  };
+
+  // Build the URL to the search endpoint using the registered method
+  var url = endpoint.call(this, query);
+  console.log(url);
+
+  $.ajax({url: url, dataType: 'jsonp', jsonpCallback: 'br.BRSearchCallback'});
+
+};
+
 // BRSearchCallback()
 //______________________________________________________________________________
 BookReader.prototype.BRSearchCallback = function(results) {
@@ -3642,7 +3680,7 @@ BookReader.prototype.initToolbar = function(mode, ui) {
     $("#BookReader").append(
           "<div id='BRtoolbar'>"
         +   "<span id='BRtoolbarbuttons'>"
-        +     "<form action='javascript:br.search($(\"#textSrch\").val());' id='booksearch'>"
+        +     "<form action='javascript:br.customSearch();' id='booksearch'>"
           + "<input type='search' id='nameSrch' name='nameSrch' val='' placeholder='Name' size=10/>&nbsp;&nbsp;" +
           "<input type='search' id='dateSrch' name='dateSrch' val='' placeholder='Date'/>&nbsp;&nbsp;" +
           "<input type='search' id='placeSrch' name='placeSrch' val='' placeholder='Place'/><br>" +
