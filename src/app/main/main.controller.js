@@ -11,6 +11,10 @@ angular.module('bookreader')
 
     var bookurl = getParameterByName('bookurl');
     var pages = getParameterByName('pages');
+    var bookId = getParameterByName('bookid') || (function () {
+        console.error('Error: No book ID was provided.');
+        return 89;
+      }());
 
     console.log('start', getParameterByName('foo'));
    var br = new BookReader();
@@ -127,7 +131,7 @@ angular.module('bookreader')
       });
 
       // TODO: Update this URL with the correct book ID
-      var url = 'https://www.gengophers.com/api/books/89/search?' +
+      var url = 'https://www.gengophers.com/api/books/' + bookId + '/search?' +
         parts.map(function (o) {return o.k + '=' + o.v;}).join('&');
 
       // Wrap the JSON call in a JSON-P wrapper for now
