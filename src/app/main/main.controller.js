@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('bookreader')
-  .controller('MainCtrl', function ($scope, $location) {
+  .controller('MainCtrl', function ($scope, $window, $http) {
     function getParameterByName(name) {
       name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
       var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
+        results = regex.exec($window.location.search);
       return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
 
@@ -16,34 +16,45 @@ angular.module('bookreader')
         return 89;
       }());
 
-    console.log('start', getParameterByName('foo'));
+    console.log('start', bookurl, pages, bookId);
    var br = new BookReader();
     $scope.br = br;
 
-// Return the width of a given page.  Here we assume all images are 800 pixels wide
-    br.getPageWidth = function(index) {
-      return 800;
-    }
+    // DWQ I have no idea why getPageHeight is called with invalid page numbers, but it is
+    var clamp = function(index, pageDims) {
+      if (index < 0 || index == null || isNaN(index)) {
+        index = 0;
+      }
+      else if (index >= pageDims.length) {
+        index = pageDims.length - 1;
+      }
+      return index;
+    };
 
-// Return the height of a given page.  Here we assume all images are 1200 pixels high
+// Return the width of a given page.
+    br.getPageWidth = function(index) {
+      return br.pageDims[clamp(index-1, br.pageDims)].w; // pageDims array is 0-based; it is populated by the $http request at the bottom
+    };
+
+// Return the height of a given page.
     br.getPageHeight = function(index) {
-      return 1200;
-    }
+      return br.pageDims[clamp(index-1, br.pageDims)].h;
+    };
 
 // We load the images from archive.org -- you can modify this function to retrieve images
 // using a different URL structure
     br.getPageURI = function(index, reduce, rotate) {
-      return bookurl + (index+1) + '.jpg';
-    }
+      return bookurl + index + '.jpg';
+    };
 
 // Return which side, left or right, that a given page should be displayed on
     br.getPageSide = function(index) {
-      if (0 == (index & 0x1)) {
+      if (1 == (index & 0x1)) {
         return 'R';
       } else {
         return 'L';
       }
-    }
+    };
 
 // This function returns the left and right indices for the user-visible
 // spread that contains the given index.  The return values may be
@@ -73,14 +84,14 @@ angular.module('bookreader')
       }
 
       return spreadIndices;
-    }
+    };
 
 // For a given "accessible page index" return the page number in the book.
 //
 // For example, index 5 might correspond to "Page 1" if there is front matter such
 // as a title page and table of contents.
     br.getPageNum = function(index) {
-      return index+1;
+      return index;
     }
 
 // Total number of leafs
@@ -113,50 +124,44 @@ angular.module('bookreader')
      */
     br.searchEndpoints.std = function (query) {
 
-      // What query string parameter names should be used for each of the query object fields
-      var mapping = {
-        name: 'surname',
-        date: 'date',
-        place: 'place',
-        relative1: 'rel1',
-        relative2: 'rel2',
-        relative3: 'rel3'
-      };
-
       var parts = [];
       Object.keys(query).forEach(function (key) {
         if (query[key]) {
-          parts.push({k: mapping[key], v: query[key]});
+          parts.push({k: key, v: query[key]});
         }
       });
 
       // TODO: Update this URL with the correct book ID
-      var url = 'https://www.gengophers.com/api/books/' + bookId + '/search?' +
-        parts.map(function (o) {return o.k + '=' + o.v;}).join('&');
+      var url = '/api/books/' + bookId + '/search?' +
+        parts.map(function (o) {return o.k + '=' + encodeURIComponent(o.v);}).join('&');
 
-      // Wrap the JSON call in a JSON-P wrapper for now
-      return 'http://json2jsonp.com/?url=' + encodeURIComponent(url);
+      return url;
     };
 
 
 
 // Let's go!
-    br.init();
+    $http.get('/api/books/'+bookId+'/pagedims')
+      .success(function(data) {
+        br.pageDims = data.dimensions;
 
+        br.init();
 
-    // Show the initial search results
-    var initialSearch = getParameterByName('initialsearch');
-    if (initialSearch) {
-      console.log("Initial search: " + initialSearch);
-      br.fillSearchForm(JSON.parse(initialSearch));
-      br.customSearch();
-    }
+        // Show the initial search results
+        var initialSearch = getParameterByName('initialsearch');
+        if (initialSearch) {
+          console.log("Initial search: " + initialSearch);
+          br.fillSearchForm(JSON.parse(initialSearch));
+          br.customSearch();
+        }
 
 // read-aloud and search need backend compenents and are not supported in the demo
 //    $('#BRtoolbar').find('.read').hide();
 //    $('#textSrch').hide();
 //    $('#btnSrch').hide();
 
-    console.log('end');
+        console.log('end');
+      });
+      // TODO need to handle error case
 
   });

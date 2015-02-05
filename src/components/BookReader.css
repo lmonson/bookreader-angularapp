@@ -307,8 +307,12 @@ form#booksearch input[type=search] {
     outline: none;
 }
 
-form#booksearch input[id=nameSrch] {
-  min-width: 22em;
+form#booksearch input[id=givenSrch] {
+    min-width: 16em;
+}
+
+form#booksearch input[id=surnameSrch] {
+    min-width: 16em;
 }
 
 form#booksearch input[id=dateSrch] {
