@@ -2764,12 +2764,13 @@ BookReader.prototype.search = function(term) {
 }
 
 BookReader.prototype.fillSearchForm = function (query) {
-  $('#nameSrch').val(query.name);
+  $('#givenSrch').val(query.given);
+  $('#surnameSrch').val(query.surname);
   $('#dateSrch').val(query.date);
   $('#placeSrch').val(query.place);
-  $('#relSrch1').val(query.relative1);
-  $('#relSrch2').val(query.relative2);
-  $('#relSrch3').val(query.relative3);
+  $('#relSrch1').val(query.rel1);
+  $('#relSrch2').val(query.rel2);
+  $('#relSrch3').val(query.rel3);
 };
 
   /**
@@ -2783,37 +2784,61 @@ BookReader.prototype.customSearch = function (endpoint) {
   endpoint = this.searchEndpoints[endpoint || Object.keys(this.searchEndpoints)[0]];
 
   var query = {
-    name: $('#nameSrch').val(),
+    given: $('#givenSrch').val(),
+    surname: $('#surnameSrch').val(),
     date: $('#dateSrch').val(),
     place: $('#placeSrch').val(),
-    relative1: $('#relSrch1').val(),
-    relative2: $('#relSrch2').val(),
-    relative3: $('#relSrch3').val()
+    rel1: $('#relSrch1').val(),
+    rel2: $('#relSrch2').val(),
+    rel3: $('#relSrch3').val()
   };
 
   // Build the URL to the search endpoint using the registered method
   var url = endpoint.call(this, query);
-  console.log(url);
+  console.log('customSearch', url);
 
-  $.ajax({url: url, dataType: 'jsonp', jsonpCallback: 'br.BRSearchCallback'});
+  var self = this;
+
+  $.ajax({url: url, dataType: 'json', success: function(results) {
+      console.log('customSearch', results);
+      // convert boxes from page dimensions to image dimensions
+      for (var i = 0, leni = results.matches.length; i < leni; i++) {
+          var match = results.matches[i];
+          var pageHeight = match.par[0].page_height;
+          var pageWidth = match.par[0].page_width;
+          var imageHeight = self.pageDims[match.par[0].page-1].h;
+          var imageWidth = self.pageDims[match.par[0].page-1].w;
+          var heightScale = imageHeight / pageHeight;
+          var widthScale = imageWidth / pageWidth;
+
+          for (var j = 0, lenj = match.par[0].boxes.length; j < lenj; j++) {
+              var box = match.par[0].boxes[j];
+              box.b *= heightScale;
+              box.t *= heightScale;
+              box.r *= widthScale;
+              box.l *= widthScale;
+          }
+      }
+      self.BRSearchCallback(results);
+  }});
 
 };
 
 // BRSearchCallback()
 //______________________________________________________________________________
 BookReader.prototype.BRSearchCallback = function(results) {
-    //console.log('got ' + results.matches.length + ' results');
+    console.log('got ' + results.matches.length + ' results');
     br.removeSearchResults();
     br.searchResults = results;
-    //console.log(br.searchResults);
+    console.log(br.searchResults);
 
     if (0 == results.matches.length) {
         var errStr  = 'No matches were found.';
         var timeout = 1000;
-        if (false === results.indexed) {
-            errStr  = "<p>This book hasn't been indexed for searching yet. We've just started indexing it, so search should be available soon. Please try again later. Thanks!</p>";
-            timeout = 5000;
-        }
+        //if (false === results.indexed) {
+        //    errStr  = "<p>This book hasn't been indexed for searching yet. We've just started indexing it, so search should be available soon. Please try again later. Thanks!</p>";
+        //    timeout = 5000;
+        //}
         $(br.popup).html(errStr);
         setTimeout(function(){
             $(br.popup).fadeOut('slow', function() {
@@ -2840,7 +2865,7 @@ BookReader.prototype.updateSearchHilites = function() {
     } else {
         this.updateSearchHilites1UP();
     }
-}
+};
 
 // showSearchHilites1UP()
 //______________________________________________________________________________
@@ -3680,8 +3705,9 @@ BookReader.prototype.initToolbar = function(mode, ui) {
     $("#BookReader").append(
           "<div id='BRtoolbar'>"
         +   "<span id='BRtoolbarbuttons'>"
-        +     "<form action='javascript:br.customSearch();' id='booksearch'>"
-          + "<input type='search' id='nameSrch' name='nameSrch' val='' placeholder='Name' size=10/>&nbsp;&nbsp;" +
+        +     "<form action='javascript:br.customSearch();' id='booksearch'>" +
+          "<input type='search' id='givenSrch' name='givenSrch' val='' placeholder='First Name'/>&nbsp;&nbsp;" +
+          "<input type='search' id='surnameSrch' name='surnameSrch' val='' placeholder='Last Name'/>&nbsp;&nbsp;" +
           "<input type='search' id='dateSrch' name='dateSrch' val='' placeholder='Date'/>&nbsp;&nbsp;" +
           "<input type='search' id='placeSrch' name='placeSrch' val='' placeholder='Place'/><br>" +
           "<input type='search' id='relSrch1' name='relSrch1' val='' placeholder=\"Relative's name\"/>&nbsp;&nbsp;" +
