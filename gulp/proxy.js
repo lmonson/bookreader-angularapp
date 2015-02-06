@@ -24,7 +24,7 @@ var https = require('https');
  */
 var proxy = httpProxy.createProxyServer({
   target: 'https://www.gengophers.com',
-  argent: https.globalAgent,
+  agent: https.globalAgent,
   headers: {
     host: 'www.gengophers.com'
   }
