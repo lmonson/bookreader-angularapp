@@ -170,7 +170,7 @@ a {
 .BookReaderSearchHilite {
     opacity: 0.20;
     filter: alpha(opacity = 20);
-    background-color: #00f;
+    background-color: #FF7900;
     position:absolute;
 }
 
