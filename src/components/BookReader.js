@@ -2811,6 +2811,9 @@ BookReader.prototype.customSearch = function (endpoint) {
           var heightScale = imageHeight / pageHeight;
           var widthScale = imageWidth / pageWidth;
 
+          if (match.par[0].boxes == null) {
+              match.par[0].boxes = [];
+          }
           for (var j = 0, lenj = match.par[0].boxes.length; j < lenj; j++) {
               var box = match.par[0].boxes[j];
               box.b *= heightScale;
