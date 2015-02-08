@@ -26,11 +26,11 @@ a {
     position: relative;
     top: 0;
     left: 0;
-    height: 75px;
-    padding: 0;
+	height: auto;
+	padding: 0;
     width: 100%;
     z-index: 100;
-    background-color: #e2dcc5;
+	background-color: #dbd1bd;
     -webkit-box-shadow: 0 1px 3px #999;
     /* Shadow here on FF causes scroll bars */
     overflow: hidden;
@@ -43,11 +43,9 @@ a {
     color: #ccc;
     text-decoration: underline;
 }
-#BRtoolbarbuttons {
-    float: right;
-}
+
 #BRcontainer {
-    top:80px;
+    top:70px;
     bottom:0;
     width:100%;
     z-index: 1;
@@ -289,53 +287,9 @@ a.popOff span {
 }
 
 form#booksearch {
-    float: left;
-    margin-right: 10px;
-}
-form#booksearch input[type=search] {
-    min-width: 16em;
-    height: 22px;
-    line-height: 22px;
-    font-family: "Arial", sans-serif;
-    font-size: 13px;
-    -webkit-appearance: textfield;
-    -moz-appearance: textfield;
-    appearance: field;
-    margin: 9px 0 0 0;
-    padding: 0;
-    border: 1px inset #ccc;
-    outline: none;
-}
-
-form#booksearch input[id=givenSrch] {
-    min-width: 16em;
-}
-
-form#booksearch input[id=surnameSrch] {
-    min-width: 16em;
-}
-
-form#booksearch input[id=dateSrch] {
-  min-width: 6em;
-  max-width: 10em;
-}
-
-form#booksearch button {
-    width: 30px;
-    height: 24px;
-    line-height: 24px;
-    border: none;
-    background-color: #000;
-    text-align: center;
-    color: #fff;
-    font-family: "News Gothic MT","Trebuchet MS",Geneva,Helvetica,sans-serif;
-    font-weight: 700;
-    font-size: 11px;
-    text-transform: uppercase;
-    margin: 10px 0 0 5px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
+    float:right;
+    margin-right: 28px;
+    padding: 6px 0;
 }
 
 .BRlogotype {
@@ -600,7 +554,7 @@ div#BRnav {
     height: 40px;
     overflow: visible;
     z-index: 100;
-    background-color: #e2dcc5;
+    background-color: #dbd1bd;
 
     -webkit-box-shadow: 1px 1px 2px #333;
     /* No shadow for FF, to be consistent with toolbar */
@@ -652,7 +606,7 @@ div#BRfiller {
     position: absolute;
     height: 40px;
     width: 10px;
-    background-color: #e2dcc5;
+    background-color: #dbd1bd;
     top: 0;
     left: 0;
     z-index: 102;
@@ -824,7 +778,7 @@ div#BRzoompos {
 div#BRzoomer button {
     position: absolute;
     left: 0;
-    background-color: #e2dcc5;
+    background-color: #dbd1bd;
     width: 26px;
 }
 div#BRzoomer button:hover {
@@ -896,7 +850,7 @@ div#BRzoombtn {
 }
 
 .BRnavCntl {
-    background-color: #e2dcc5;
+    background-color: #dbd1bd;
     position: absolute;
     right: 20px;
     width: 40px;
@@ -931,4 +885,69 @@ div#BRzoombtn {
 }
 #BRnavCntlTop.BRup,#BRnavCntlTop.BRdn {
     background-position: 8px 4px;
+}
+
+#booksearch div:last-child{
+    text-align: left;
+    padding-left: 40px;
+}
+
+div.breakline{
+    width: 100% !important;
+    height: 10px;
+}
+
+#booksearch input[type=text], #booksearch input[type=search], #booksearch input[type=email], #booksearch input[type=password]{
+  background-color: #FFFFFF;
+  background-image: none;
+  border: 1px solid #DDDDDD;
+  border-radius: 4px 4px 4px 4px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+  height: 25px;
+  padding: 8px;
+  margin: 2px 7px;
+  transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+}
+
+#booksearch input[type=text]:focus, #booksearch input[type=search]:focus, #booksearch input[type=email]:focus, #booksearch input[type=password]:focus{
+  border-color: #66AFE9;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+  outline: 0 none;
+}
+
+#btnSrch {
+  background-color: #80C31C;
+  border-color: #80C31C;
+  color: #FFFFFF;
+  font-family: "Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif;
+  -moz-user-select: none;
+  background-image: none;
+  border: 1px solid rgba(0, 0, 0, 0);
+  border-radius: 4px 4px 4px 4px;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.42857;
+  margin-top: -20px;
+  margin-bottom: 0;
+  margin-left: 4px;
+  padding: 8px 12px;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+#btnSrch:hover {
+  background-color: #639616;
+  border-color: #5D8D14;
+  color: #FFFFFF;
+}
+
+#givenSrch, #surnameSrch, #dateSrch{
+    width: 140px;
+}
+
+#placeSrch, #relSrch1, #relSrch2, #relSrch3{
+    width: 217px;
 }

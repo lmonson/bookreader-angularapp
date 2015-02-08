@@ -3518,7 +3518,6 @@ BookReader.prototype.addSearchResult = function(queryString, pageIndex) {
     }
 
     var re = new RegExp('{{{(.+?)}}}', 'g');
-    console.log('queryString', queryString);
     queryString = queryString.replace(re, '<a href="#" onclick="br.jumpToIndex('+pageIndex+'); return false;">$1</a>')
 
     var marker = $('<div class="search" style="top:'+(-$('#BRcontainer').height())+'px; left:' + percentThrough + ';" title="' + uiStringSearch + '"><div class="query">'
@@ -3709,14 +3708,14 @@ BookReader.prototype.initToolbar = function(mode, ui) {
           "<div id='BRtoolbar'>"
         +   "<span id='BRtoolbarbuttons'>"
         +     "<form action='javascript:br.customSearch();' id='booksearch'>" +
-          "<input type='search' id='givenSrch' name='givenSrch' val='' placeholder='First Name'/>&nbsp;&nbsp;" +
-          "<input type='search' id='surnameSrch' name='surnameSrch' val='' placeholder='Last Name'/>&nbsp;&nbsp;" +
-          "<input type='search' id='dateSrch' name='dateSrch' val='' placeholder='Date'/>&nbsp;&nbsp;" +
+          "<input type='search' id='givenSrch' name='givenSrch' val='' placeholder='First Name'/>" +
+          "<input type='search' id='surnameSrch' name='surnameSrch' val='' placeholder='Last Name'/>" +
+          "<input type='search' id='dateSrch' name='dateSrch' val='' placeholder='Date'/>" +
           "<input type='search' id='placeSrch' name='placeSrch' val='' placeholder='Place'/><br>" +
-          "<input type='search' id='relSrch1' name='relSrch1' val='' placeholder=\"Relative's name\"/>&nbsp;&nbsp;" +
-          "<input type='search' id='relSrch2' name='relSrch2' val='' placeholder=\"Relative's name\"/>&nbsp;&nbsp;" +
+          "<input type='search' id='relSrch1' name='relSrch1' val='' placeholder=\"Relative's name\"/>" +
+          "<input type='search' id='relSrch2' name='relSrch2' val='' placeholder=\"Relative's name\"/>" +
           "<input type='search' id='relSrch3' name='relSrch3' val='' placeholder=\"Relative's name\"/>" +
-          "<button type='submit' id='btnSrch' name='btnSrch'>GO</button>" +
+          "<button type='submit' id='btnSrch' name='btnSrch'>Search</button>" +
           "</form>"
         //+     "<button class='BRicon play'></button>"
         //+     "<button class='BRicon pause'></button>"
